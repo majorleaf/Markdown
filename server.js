@@ -48,7 +48,7 @@ app.get ('/', (req, res) =>  {
 }
 );
  
-app.post('/note', (req, res) => {
+app.post('/notes', (req, res) => {
     try { 
         // take the note from the incoming request body
         const { note } = req.body;
@@ -66,7 +66,7 @@ app.post('/note', (req, res) => {
         // write the file to the file system
         fs.writeFileSync(filepath, note);
 
-        req.status(500).json({
+        res.status(201).json({
             message: "Note saved successfully",
             filename: filename
         });
@@ -83,6 +83,26 @@ app.post('/notes/upload', upload.single('markdown_file'), (req, res) => {
     console.log(req.file);
     res.send("File uploaded!")
 });
+
+
+app.get('/note/filename:html', (req, res) => {
+    try {
+        // fetch file
+           const filename = req.params.filename;
+        // filepath
+         const filepath = `${notesDir}/${filename}`;
+         // Read the file's contents into a variable (using utf8 to get text, not a raw buffer)
+         const markdownText = fs.readFileSync(filepath, 'utf8');
+         //convert the markdown text to HTML using the marked library 
+         const htmlContent = marked.parse(markdownText);
+         // send the HTML back to the client using res.send()
+         res.send(htmlContent);
+
+    } catch(error) {
+        console.log( "note couldn't be fetched or read ");
+        res.status(404).json({ error: "error"});
+    }
+})
 
 
 app.listen(8000, () => { 
