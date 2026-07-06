@@ -102,7 +102,49 @@ app.get('/note/filename:html', (req, res) => {
         console.log( "note couldn't be fetched or read ");
         res.status(404).json({ error: "error"});
     }
-})
+});
+
+// grammar check 
+app.get('/notes/:filename/grammar', async (req, res) => {
+    try {
+         // fetch file
+         const filename = req.params.filename;
+         //filepath
+         const filepath = `${notesDir}/${filename}`;
+         // read file content into a variable 
+         const markdownText = fs.readFileSync(filepath, 'utf8');
+         // ---EXTERNAL API---
+         console.log("Sending text to LanguageTool....");
+         //we use URLSearchParams to format the data 
+         const params = new URLSearchParams({
+
+            text: markdownText,
+            language: 'en-US'
+         });
+
+         // request to the external api
+         const response = await fetch('https://api.languagetool.org/v2/check', {
+            method: 'POST', 
+            body: params
+         });
+
+         const data = await response.json();  // response to JSON
+
+         res.json({
+            message: "Grammar check complete",
+            issuesFound: data.matches.length,
+            issues: data.matches
+         })
+
+
+        
+
+
+    } catch(error) {
+        console.error("error checking grammar:" ,error);
+        res.status(404).json({ error: "error nigga"})
+    }
+});
 
 
 app.listen(8000, () => { 
