@@ -38,9 +38,22 @@ const storage = multer.diskStorage({
     }
 });
 
+const markdownFileFilter = (req, files, cb) => {
+    // check if file is a markdown file
+    if (file.mimetype === 'text/markdown' || file.originalname.tolowerCase().endsWith('.md')) {
+        // Accept the file
+        cb(null, true);
+
+    } else {
+        // reject the file
+
+    }
+};
 
 // multer storage configuration
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage,
+    fileFilter: markdownFileFilter
+ });
  
 app.get ('/', (req, res) =>  {
     console.log( "Markdown" );
