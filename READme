@@ -1,0 +1,114 @@
+ Markdown Note-Taking REST API
+
+A robust backend REST API built with Node.js and Express for managing, parsing, and analyzing Markdown notes.
+
+This project goes beyond basic CRUD operations by implementing direct file system interactions, secure multipart file uploads, dynamic text rendering, and third-party API integration.
+
+✨ Core Features
+
+Direct Text Saving: Accepts raw markdown via JSON and securely writes it to the server's local file system with uniquely generated UUID filenames to prevent collisions.
+
+Multipart File Uploads: Allows clients to upload existing .md files using multer.
+
+Security Filtering: Actively intercepts incoming file uploads and rejects non-Markdown or malicious file types.
+
+Dynamic HTML Rendering: Reads saved .md files and parses them into browser-ready HTML on the fly using the marked library.
+
+Automated Grammar Checking: Acts as a client to securely pass note text to the LanguageTool API, returning grammar and spelling analysis to the user.
+
+🛠️ Tech Stack
+
+Runtime: Node.js (ES Modules)
+
+Framework: Express.js
+
+File Uploads: Multer (DiskStorage Engine)
+
+Markdown Parsing: Marked
+
+External Integration: Native Node fetch API
+
+🚀 Getting Started
+
+Prerequisites
+
+Make sure you have Node.js installed on your machine.
+
+Installation
+
+Clone this repository.
+
+Initialize the project and install dependencies:
+
+npm install express dotenv multer marked
+
+
+Ensure your package.json includes "type": "module".
+
+Create a .env file in the root directory and add your port:
+
+PORT=8000
+
+
+Running the Server
+
+Start the server using Node or Nodemon:
+
+node server.js
+
+
+Note: The server will automatically create a local notes/ directory to store your files upon starting.
+
+🛣️ API Endpoints
+
+Method
+
+Endpoint
+
+Description
+
+Body / Payload
+
+POST
+
+/notes
+
+Creates a new note from raw text.
+
+{ "note": "# Your markdown here" }
+
+POST
+
+/notes/upload
+
+Uploads an existing .md file.
+
+multipart/form-data (key: markdown_file)
+
+GET
+
+/notes/:filename/html
+
+Returns the rendered HTML version of a saved note.
+
+URL Parameter: filename
+
+GET
+
+/notes/:filename/grammar
+
+Analyzes a note and returns grammar/spelling issues.
+
+URL Parameter: filename
+
+🔮 Future Evolutions
+
+This project is structured as a foundational backend. Planned future enhancements include:
+
+Migrating local file storage to a Cloud Bucket (AWS S3 / Cloudinary).
+
+Connecting a database (MongoDB/PostgreSQL) to store note metadata (authors, tags, timestamps).
+
+Implementing JWT authentication for private user accounts.
+
+Building a full-stack frontend interface using React.
